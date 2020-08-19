@@ -1,6 +1,5 @@
 /*
   system.cpp
-  
   ... see system.h for class `surface_mantle_system`
 
  */
@@ -75,33 +74,22 @@ void surface_mantle_system::next(double time, double dt, double Deta_stiff){
        evolution of volatile, and solve for updated compostions
     */
     volatile_loss(dt, vs);
-        
+    
     /* Gibbs free energy minimization */
     MoleculeData_G   gibbs_list("./spec_atmos.txt", Ts, 1.0);
     gibbsminCG       min(gibbs_list, natms);
     tensor1d<double> nequil = min.getnbest();
     natms = nequil;
-
-    // updated atmos composition
+    
+    /* updated atmos composition */
     for (int j=0; j<(int)natms.size(); j++){ cout << natms[j] << "\t"; }   cout << vs*yr2sec << endl;
     
-}
-double surface_mantle_system::surface_T(double W){
-    /* constants */
-    double S0 = 960;                 // solar radiation, assumed to be 30% weaker than present
-    double kappa0 = 0.01;
+    /* update temperature */
+    double PCO2 = natms[2]/119.8*1.013e5;
+    atmos1d atmstruc(PN2+PCO2, PCO2/(PN2+PCO2));
+    atmstruc.calc_Tprofile(FEarth);
+    Ts = atmstruc.get_Tsurf();
     
-    /* calculate opacity */
-    double kappaR  = sqrt(kappa0*gv/3/Patm);
-    double P_H2O   = natms[0]/170 * Patm * 0;
-    double P_CO2   = natms[2]/170 * Patm;
-    double tau     = 1.5*kappaR* (P_H2O+P_CO2) /gv;
-    
-    /* From Abe and Matsui (1985) */
-    double F0   = 140;
-    double Tnow = pow( (F0*(1+tau/2) + S0/4)/sb, 0.25);
-    
-    return Tnow;
 }
 void surface_mantle_system::volatile_loss(double dt, double vs){
     /*
@@ -144,8 +132,8 @@ void surface_mantle_system::volatile_loss(double dt, double vs){
      */
     double Mgn = 0.95;
     if (homo){ Mgn = 0.88; }
-    double mol_react_olivine = M_react_olivine / (140.693e-3*Mgn + 203.77e-3*(1-Mgn));
-    double produce_H2        = mol_react_olivine * (1-Mgn) * 2.0/3;
+    double mol_react_olivine   = M_react_olivine / (140.693e-3*Mgn + 203.77e-3*(1-Mgn));
+    double produce_H2          = mol_react_olivine * (1-Mgn) * 2.0/3;
     double consume_Mgol_byH2   = produce_H2 * 4.5;
     double consume_Mgol_bycarb = mol_react_olivine - consume_Mgol_byH2;
     double consume_CO2         = consume_Mgol_bycarb * 0.5;
@@ -156,7 +144,7 @@ void surface_mantle_system::volatile_loss(double dt, double vs){
     
     /* updated composition */
     double unit = 1e18;
-    natms[0] -= consume_H2O/unit;
+    // natms[0] -= consume_H2O/unit;
     natms[1] += produce_H2/unit;
     natms[2] -= consume_CO2/unit;
 

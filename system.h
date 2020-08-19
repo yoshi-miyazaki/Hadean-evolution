@@ -15,7 +15,8 @@
  */
 
 #include "../GibbsFE_minimization/CGgibbsmin.h"
-#include "../tensor.h"
+#include "../GibbsFE_minimization/tensor.h"
+#include "./atmos1d.h"
 
 class surface_mantle_system{
  public:
@@ -61,5 +62,6 @@ class surface_mantle_system{
     const double T_now   = 1350 + (Tref - 25);
     const double eta_now = 1e19;  // mantle viscosity at T = T_now for a wet mantle
     const double E_diff  = 300e3; // activation energy for olivine
-
+    const double PN2     = 1.0e5; // atmoshperic pressure of N2
+    const double FEarth  = 165.;  // net solar radiation for early Earth with albedo 0.3
 };

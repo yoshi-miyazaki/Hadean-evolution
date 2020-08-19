@@ -19,11 +19,11 @@ int main(){
        
        1. the surface (ocean+atmosphere) component 
        
-       Ts  : surface temperature [K]  (Tref = 298.15K)
-       atm : initial atmospheric pressure [atm]
+       Ts   : surface temperature [K]  (Tref = 298.15K)
+       Patm : initial CO2 pressure [atm]
     */
     double Ts  = 200 + (Tref-25);
-    double atm = 177;
+    double Patm = 177;
     
     /* 2. mantle component 
        
@@ -53,7 +53,7 @@ int main(){
     /* ---------- [ model ] ----------
        Do not change below unless necessary 
     */
-    surface_mantle_system sys(atm, Ts, Tm, D, homogeneous, Tc);
+    surface_mantle_system sys(Patm, Ts, Tm, D, homogeneous, Tc);
     
     double dt = 5e6*yr2sec; 
     double time = 0.;
