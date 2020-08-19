@@ -39,7 +39,7 @@ atmos1d.cpp / atmos1d.h
     - The molar ratio of CO2 (`xCO2`)
     - The effect of other greenhouse gases can be included by calculating a equivalent `xCO2` value.
   - Output
-    - `get_Tsurf()` returns the atmo
+    - `get_Tsurf()` returns the surface temperature
 
 spec_atmos.txt
   - This file lists all the species considered in Gibbs energy minimization
