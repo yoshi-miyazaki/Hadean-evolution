@@ -31,6 +31,16 @@ mantle.cpp
   - Function to calculate plate velocity `Nu_heat_scaling`
     - based on heat flow scaling of Korenega (2010, JGR)
   
+atmos1d.cpp / atmos1d.h
+  - This constructs `atmos1d` object, which models the 1-D atmospheric strcture
+    - The model assumes that the existence of ocean and the troposphere is saturated with water vapor
+  - Input
+    - The surface pressure of non-condensible species (`Psurf`)
+    - The molar ratio of CO2 (`xCO2`)
+    - The effect of other greenhouse gases can be included by calculating a equivalent `xCO2` value.
+  - Output
+    - `get_Tsurf()` returns the atmo
+
 spec_atmos.txt
   - This file lists all the species considered in Gibbs energy minimization
     - Species can be added or removed, but their thermodynamic information needs to be included in `../GibbsFE_minimization/Gibbs_data/` to successfully run the model.
